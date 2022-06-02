@@ -4,9 +4,10 @@ import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationOutputDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO
 import org.springframework.beans.factory.annotation.Autowired
 
-class ProductsMapperTest extends AbstractIntegrationTest {
+class ProductsMapperIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     ProductsMapper productsMapper
@@ -36,5 +37,21 @@ class ProductsMapperTest extends AbstractIntegrationTest {
 
         then:
         outputDTO.getBarcode() == product.getBarcode()
+    }
+
+    def "map to product list dto works correctly" () {
+        given:
+        Product product = Product.builder()
+                .id("id")
+                .barcode("barcode")
+                .name("name").build()
+
+        when:
+        ProductListDTO dto = this.productsMapper.toProductListDTO(product)
+
+        then:
+        dto.getId() == product.getId()
+        dto.getBarcode() == product.getBarcode()
+        dto.getName() == product.getName()
     }
 }
