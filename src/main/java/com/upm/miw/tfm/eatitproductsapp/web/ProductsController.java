@@ -1,17 +1,16 @@
 package com.upm.miw.tfm.eatitproductsapp.web;
 
 import com.upm.miw.tfm.eatitproductsapp.exception.ValidationException;
-import com.upm.miw.tfm.eatitproductsapp.service.model.Product;
+import com.upm.miw.tfm.eatitproductsapp.service.ProductsService;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationOutputDTO;
-import com.upm.miw.tfm.eatitproductsapp.service.ProductsService;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Optional;
+import java.util.Collection;
 
 @RestController
 @RequestMapping(ProductsController.PRODUCTS_PATH)
@@ -19,6 +18,7 @@ public class ProductsController {
     public static final String PRODUCTS_PATH = "/products";
     public static final String ADD_PRODUCT_PATH = "";
     public static final String FIND_BY_BARCODE_PATH = "/barcode/";
+    public static final String FIND_BY_NAME_PATH = "/name/";
 
     private final ProductsService productsService;
 
@@ -41,5 +41,11 @@ public class ProductsController {
     @GetMapping(FIND_BY_BARCODE_PATH + "{barcode}")
     public ResponseEntity<ProductListDTO> getProductByBarcode(@PathVariable("barcode") String barcode) {
         return ResponseEntity.of(this.productsService.findProductByBarcode(barcode));
+    }
+
+    @GetMapping(FIND_BY_NAME_PATH + "{productName}")
+    public ResponseEntity<Collection<ProductListDTO>> findProductsThatContainsName(@PathVariable("productName") String productName) {
+        return ResponseEntity.ok()
+                .body(this.productsService.findProductThatContainsName(productName));
     }
 }
