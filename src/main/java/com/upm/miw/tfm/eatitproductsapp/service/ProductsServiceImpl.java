@@ -9,7 +9,9 @@ import com.upm.miw.tfm.eatitproductsapp.service.model.Product;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -41,5 +43,12 @@ public class ProductsServiceImpl implements ProductsService {
             return Optional.empty();
         }
         return Optional.of(this.productsMapper.toProductListDTO(product.get()));
+    }
+
+    @Override
+    public Collection<ProductListDTO> findProductThatContainsName(String productName) {
+        return this.productsRepository.findByNameLike(productName).stream()
+                .map(this.productsMapper::toProductListDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -54,4 +54,30 @@ class ProductsServiceIntegrationTest extends AbstractIntegrationTest {
         then:
         result.isEmpty()
     }
+
+    def "findByNameLike returns products which name fits with the search term" () {
+        given:
+        this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
+        this.productsRepository.save(Product.builder().name("Jamón de pata negra").barcode("barcode2").build())
+        this.productsRepository.save(Product.builder().name("Tacos de Jamón").barcode("barcode3").build())
+        this.productsRepository.save(Product.builder().name("Cebolla").barcode("barcode4").build())
+
+        when:
+        Collection<ProductListDTO> products = this.productsService.findProductThatContainsName("Jamón")
+
+        then:
+        products.size() == 2
+    }
+
+    def "findByNameLike returns empty list when no products are found" () {
+        given:
+        this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
+        this.productsRepository.save(Product.builder().name("Cebolla").barcode("barcode4").build())
+
+        when:
+        Collection<ProductListDTO> products = this.productsService.findProductThatContainsName("Jamón")
+
+        then:
+        products.isEmpty()
+    }
 }

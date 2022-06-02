@@ -59,4 +59,30 @@ class ProductsControllerTest extends AbstractWebIntegrationTest {
                 .exchange()
                 .expectStatus().isNotFound()
     }
+
+    def "server returns 200 and products which name fits with the search term" () {
+        given:
+        this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
+        this.productsRepository.save(Product.builder().name("Jamón de pata negra").barcode("barcode2").build())
+        this.productsRepository.save(Product.builder().name("Tacos de Jamón").barcode("barcode3").build())
+        this.productsRepository.save(Product.builder().name("Cebolla").barcode("barcode4").build())
+
+        expect:
+        this.webTestClient.get()
+                .uri(ProductsController.PRODUCTS_PATH + ProductsController.FIND_BY_NAME_PATH + "Jamón")
+                .exchange().expectStatus().isOk()
+                .expectBodyList(ProductListDTO).value(products -> products.size() == 2)
+    }
+
+    def "findByNameLike returns empty list when no products are found" () {
+        given:
+        this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
+        this.productsRepository.save(Product.builder().name("Cebolla").barcode("barcode4").build())
+
+        expect:
+        this.webTestClient.get()
+                .uri(ProductsController.PRODUCTS_PATH + ProductsController.FIND_BY_NAME_PATH + "Jamón")
+                .exchange().expectStatus().isOk()
+                .expectBodyList(ProductListDTO).value(products -> products.isEmpty())
+    }
 }
