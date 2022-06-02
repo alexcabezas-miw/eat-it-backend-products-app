@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      database: productsDB
+      uri: mongodb://localhost:27017
