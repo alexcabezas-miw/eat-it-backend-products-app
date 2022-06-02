@@ -3,7 +3,7 @@ package com.upm.miw.tfm.eatitproductsapp.repository
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
 
-class ProductsRepositoryTest extends AbstractIntegrationTest {
+class ProductsRepositoryIntegrationTest extends AbstractIntegrationTest {
 
     def "findByBarcode returns the product which barcode matches" () {
         given:

@@ -6,6 +6,7 @@ import com.upm.miw.tfm.eatitproductsapp.exception.BarcodeAlreadyAssignedToProduc
 import com.upm.miw.tfm.eatitproductsapp.repository.ProductsRepository;
 import com.upm.miw.tfm.eatitproductsapp.service.mapper.ProductsMapper;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -31,5 +32,14 @@ public class ProductsServiceImpl implements ProductsService {
         Product product = this.productsMapper.fromCreationDTO(dto);
         Product savedProduct = this.productsRepository.save(product);
         return this.productsMapper.toCreationOutputDTO(savedProduct);
+    }
+
+    @Override
+    public Optional<ProductListDTO> findProductByBarcode(String barcode) {
+        Optional<Product> product = this.productsRepository.findByBarcode(barcode);
+        if(product.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(this.productsMapper.toProductListDTO(product.get()));
     }
 }
