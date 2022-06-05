@@ -7,6 +7,7 @@ import com.upm.miw.tfm.eatitproductsapp.repository.ProductsRepository;
 import com.upm.miw.tfm.eatitproductsapp.service.mapper.ProductsMapper;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -25,6 +26,7 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ProductCreationOutputDTO createProduct(ProductCreationDTO dto) {
         Optional<Product> productByBarcode = this.productsRepository.findByBarcode(dto.getBarcode());
         if(productByBarcode.isPresent()) {
