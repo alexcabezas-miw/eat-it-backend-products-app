@@ -1,65 +1,82 @@
 package com.upm.miw.tfm.eatitproductsapp.web
 
-import com.upm.miw.tfm.eatitproductsapp.AbstractWebIntegrationTest
+import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO
-import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.context.ContextConfiguration
 
-class ProductsControllerTest extends AbstractWebIntegrationTest {
+@ContextConfiguration
+class ProductsControllerTest extends AbstractIntegrationTest {
 
-    def "server returns 201 when product is created successfully" () {
-        expect:
-        this.webTestClient.post()
-                .uri(ProductsController.PRODUCTS_PATH + ProductsController.ADD_PRODUCT_PATH)
-                .body(BodyInserters.fromValue(ProductCreationDTO.builder().name("Almendras").barcode("barcode1").build()))
-                .exchange()
-                .expectStatus().isCreated()
+    @Autowired
+    ProductsController productsController
+
+
+    @WithMockUser(username = "admin", roles = ["ADMIN"])
+    def "server returns 201 when product is created successfully and user is admin" () {
+        when:
+        def response = productsController.createProduct(ProductCreationDTO.builder().name("Almendras").barcode("barcode1").build())
+
+        then:
+        response.getStatusCode() == HttpStatus.CREATED
     }
 
-    def "server returns 400 when some product mandatory fields are missing" () {
-        expect:
-        this.webTestClient.post()
-                .uri(ProductsController.PRODUCTS_PATH + ProductsController.ADD_PRODUCT_PATH)
-                .body(BodyInserters.fromValue(ProductCreationDTO.builder().barcode("barcode1").build()))
-                .exchange()
-                .expectStatus().isBadRequest()
-    }
-
-    def "server returns 400 when attempting to add an already created product" () {
+    @WithMockUser(username = "admin", roles = ["ADMIN"])
+    def "server returns 400 when attempting to add an already created product and user is admin" () {
         given:
         this.productsRepository.save(Product.builder().name("name").barcode("barcode1").build())
-        expect:
-        this.webTestClient.post()
-                .uri(ProductsController.PRODUCTS_PATH + ProductsController.ADD_PRODUCT_PATH)
-                .body(BodyInserters.fromValue(ProductCreationDTO.builder().name("name").barcode("barcode1").build()))
-                .exchange()
-                .expectStatus().isBadRequest()
+        when:
+        def response = productsController.createProduct(ProductCreationDTO.builder().name("name").barcode("barcode1").build())
+
+        then:
+        response.getStatusCode() == HttpStatus.BAD_REQUEST
     }
 
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
+    def "server throws error when when default user attemps to create a products" () {
+        when:
+        productsController.createProduct(ProductCreationDTO.builder().name("Almendras").barcode("barcode1").build())
+
+        then:
+        thrown(AccessDeniedException)
+    }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
     def "server returns 200 and product if it was found by barcode" () {
         given:
         this.productsRepository.save(Product.builder().name("name").barcode("barcode1").build())
 
-        expect:
-        this.webTestClient.get()
-                .uri(ProductsController.PRODUCTS_PATH + ProductsController.FIND_BY_BARCODE_PATH + "barcode1")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ProductListDTO)
-                .value({
-                    it.getBarcode() == "barcode1"
-                })
+        when:
+        def result = productsController.getProductByBarcode("barcode1")
+
+        then:
+        result.getStatusCode() == HttpStatus.OK
+        result.getBody().getName() == "name"
     }
 
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
     def "server returns 404 if it was not found by barcode" () {
-        expect:
-        this.webTestClient.get()
-                .uri(ProductsController.PRODUCTS_PATH + ProductsController.FIND_BY_BARCODE_PATH + "barcode1")
-                .exchange()
-                .expectStatus().isNotFound()
+        when:
+        def result = productsController.getProductByBarcode("barcode1")
+
+        then:
+        result.getStatusCode() == HttpStatus.NOT_FOUND
     }
 
+    def "server throws error if user is not authenticated" () {
+        when:
+        productsController.getProductByBarcode("barcode1")
+
+        then:
+        thrown(AuthenticationCredentialsNotFoundException)
+    }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
     def "server returns 200 and products which name fits with the search term" () {
         given:
         this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
@@ -67,22 +84,33 @@ class ProductsControllerTest extends AbstractWebIntegrationTest {
         this.productsRepository.save(Product.builder().name("Tacos de Jamón").barcode("barcode3").build())
         this.productsRepository.save(Product.builder().name("Cebolla").barcode("barcode4").build())
 
-        expect:
-        this.webTestClient.get()
-                .uri(ProductsController.PRODUCTS_PATH + ProductsController.FIND_BY_NAME_PATH + "Jamón")
-                .exchange().expectStatus().isOk()
-                .expectBodyList(ProductListDTO).value(products -> products.size() == 2)
+        when:
+        def result = productsController.findProductsThatContainsName("Jamón")
+
+        then:
+        result.getStatusCode() == HttpStatus.OK
+        result.getBody().size() == 2
     }
 
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
     def "findByNameLike returns empty list when no products are found" () {
         given:
         this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
         this.productsRepository.save(Product.builder().name("Cebolla").barcode("barcode4").build())
 
-        expect:
-        this.webTestClient.get()
-                .uri(ProductsController.PRODUCTS_PATH + ProductsController.FIND_BY_NAME_PATH + "Jamón")
-                .exchange().expectStatus().isOk()
-                .expectBodyList(ProductListDTO).value(products -> products.isEmpty())
+        when:
+        def result = productsController.findProductsThatContainsName("Jamón")
+
+        then:
+        result.getStatusCode() == HttpStatus.OK
+        result.getBody().isEmpty()
+    }
+
+    def "findByNameLike throws error when user is not authenticated" () {
+        when:
+        productsController.findProductsThatContainsName("Jamón")
+
+        then:
+        thrown(AuthenticationCredentialsNotFoundException)
     }
 }
