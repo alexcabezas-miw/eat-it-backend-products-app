@@ -26,7 +26,6 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ProductCreationOutputDTO createProduct(ProductCreationDTO dto) {
         Optional<Product> productByBarcode = this.productsRepository.findByBarcode(dto.getBarcode());
         if(productByBarcode.isPresent()) {
