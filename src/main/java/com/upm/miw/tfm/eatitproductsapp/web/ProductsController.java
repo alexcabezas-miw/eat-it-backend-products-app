@@ -20,6 +20,7 @@ public class ProductsController {
     public static final String ADD_PRODUCT_PATH = "";
     public static final String FIND_BY_BARCODE_PATH = "/barcode/";
     public static final String FIND_BY_NAME_PATH = "/name/";
+    public static final String DELETE_BY_BARCODE_PATH = "";
 
     private final ProductsService productsService;
 
@@ -51,5 +52,16 @@ public class ProductsController {
     public ResponseEntity<Collection<ProductListDTO>> findProductsThatContainsName(@PathVariable("productName") String productName) {
         return ResponseEntity.ok()
                 .body(this.productsService.findProductThatContainsName(productName));
+    }
+
+    @DeleteMapping(DELETE_BY_BARCODE_PATH + "/" + "{barcode}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> removeProductByBarcode(@PathVariable("barcode") String barcode) {
+        try {
+            this.productsService.removeProductByBarcode(barcode);
+            return ResponseEntity.noContent().build();
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

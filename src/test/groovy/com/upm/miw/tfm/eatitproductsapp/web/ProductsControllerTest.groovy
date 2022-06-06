@@ -113,4 +113,35 @@ class ProductsControllerTest extends AbstractIntegrationTest {
         then:
         thrown(AuthenticationCredentialsNotFoundException)
     }
+
+    @WithMockUser(username = "admin", roles = ["ADMIN"])
+    def "remove product by barcode removes the product and return 204 if product exists and user is admin" () {
+        given:
+        this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
+
+        when:
+        def result = productsController.removeProductByBarcode("barcode1")
+
+        then:
+        result.getStatusCode() == HttpStatus.NO_CONTENT
+        productsRepository.findAll().isEmpty()
+    }
+
+    @WithMockUser(username = "admin", roles = ["ADMIN"])
+    def "remove product by barcode returns 400 if product does not exists and user is admin" () {
+        when:
+        def result = productsController.removeProductByBarcode("barcode1")
+
+        then:
+        result.getStatusCode() == HttpStatus.BAD_REQUEST
+    }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
+    def "remove product by barcode throws exception if user is not admin" () {
+        when:
+        productsController.removeProductByBarcode("barcode1")
+
+        then:
+        thrown(AccessDeniedException)
+    }
 }

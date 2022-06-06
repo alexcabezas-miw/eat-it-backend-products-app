@@ -11,4 +11,5 @@ public interface ProductsService {
     ProductCreationOutputDTO createProduct(ProductCreationDTO dto);
     Optional<ProductListDTO> findProductByBarcode(String barcode);
     Collection<ProductListDTO> findProductThatContainsName(String productName);
+    void removeProductByBarcode(String barcode);
 }

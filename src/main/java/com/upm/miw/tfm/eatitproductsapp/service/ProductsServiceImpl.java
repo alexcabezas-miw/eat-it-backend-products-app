@@ -1,5 +1,6 @@
 package com.upm.miw.tfm.eatitproductsapp.service;
 
+import com.upm.miw.tfm.eatitproductsapp.exception.ProductNotFoundValidationException;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationOutputDTO;
 import com.upm.miw.tfm.eatitproductsapp.exception.BarcodeAlreadyAssignedToProductValidationException;
@@ -51,5 +52,14 @@ public class ProductsServiceImpl implements ProductsService {
         return this.productsRepository.findByNameLike(productName).stream()
                 .map(this.productsMapper::toProductListDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeProductByBarcode(String barcode) {
+        Optional<Product> product = this.productsRepository.findByBarcode(barcode);
+        if(product.isEmpty()) {
+            throw new ProductNotFoundValidationException(barcode);
+        }
+        this.productsRepository.delete(product.get());
     }
 }

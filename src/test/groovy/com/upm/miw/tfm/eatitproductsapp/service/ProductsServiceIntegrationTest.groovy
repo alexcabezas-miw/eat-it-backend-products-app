@@ -2,6 +2,7 @@ package com.upm.miw.tfm.eatitproductsapp.service
 
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.exception.BarcodeAlreadyAssignedToProductValidationException
+import com.upm.miw.tfm.eatitproductsapp.exception.ProductNotFoundValidationException
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO
@@ -79,5 +80,24 @@ class ProductsServiceIntegrationTest extends AbstractIntegrationTest {
 
         then:
         products.isEmpty()
+    }
+
+    def "remvove product by barcode removes the product if product exists" () {
+        given:
+        this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
+
+        when:
+        this.productsService.removeProductByBarcode("barcode1")
+
+        then:
+        this.productsRepository.findAll().isEmpty()
+    }
+
+    def "remvove product by barcode throws exception if product does not exist" () {
+        when:
+        this.productsService.removeProductByBarcode("barcode1")
+
+        then:
+        thrown(ProductNotFoundValidationException)
     }
 }
