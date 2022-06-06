@@ -6,7 +6,6 @@ import com.upm.miw.tfm.eatitproductsapp.service.users.UsersClient;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Base64Utils;
 
 import java.util.List;
 
