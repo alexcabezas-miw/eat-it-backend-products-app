@@ -1,8 +1,8 @@
 package com.upm.miw.tfm.eatitproductsapp.config.security;
 
 import com.upm.miw.tfm.eatitproductsapp.config.FeignClientsConfiguration;
-import com.upm.miw.tfm.eatitproductsapp.service.auth.AuthenticationClient;
-import com.upm.miw.tfm.eatitproductsapp.service.users.UsersClient;
+import com.upm.miw.tfm.eatitproductsapp.web.client.auth.AuthenticationClient;
+import com.upm.miw.tfm.eatitproductsapp.web.client.users.UsersClient;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
