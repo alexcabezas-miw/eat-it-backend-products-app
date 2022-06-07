@@ -1,7 +1,7 @@
 package com.upm.miw.tfm.eatitproductsapp.web;
 
 import com.upm.miw.tfm.eatitproductsapp.exception.ValidationException;
-import com.upm.miw.tfm.eatitproductsapp.service.ProductsService;
+import com.upm.miw.tfm.eatitproductsapp.service.products.ProductsService;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationOutputDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO;

@@ -1,4 +1,4 @@
-package com.upm.miw.tfm.eatitproductsapp.service.auth;
+package com.upm.miw.tfm.eatitproductsapp.web.client.auth;
 
 import com.upm.miw.tfm.eatitproductsapp.config.security.UserCredentialsDTO;
 import feign.Headers;

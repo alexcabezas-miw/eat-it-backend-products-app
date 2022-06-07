@@ -1,5 +1,6 @@
 package com.upm.miw.tfm.eatitproductsapp
 
+import com.upm.miw.tfm.eatitproductsapp.repository.IngredientsRepository
 import com.upm.miw.tfm.eatitproductsapp.repository.ProductsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo
@@ -15,7 +16,11 @@ class AbstractIntegrationTest extends Specification {
     @Autowired
     protected ProductsRepository productsRepository
 
+    @Autowired
+    protected IngredientsRepository ingredientsRepository
+
     def cleanup() {
         productsRepository.deleteAll()
+        ingredientsRepository.deleteAll()
     }
 }

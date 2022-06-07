@@ -11,7 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ContextConfiguration
 
 @ContextConfiguration
-class ProductsControllerTest extends AbstractIntegrationTest {
+class ProductsControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     ProductsController productsController

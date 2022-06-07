@@ -1,4 +1,4 @@
-package com.upm.miw.tfm.eatitproductsapp.service;
+package com.upm.miw.tfm.eatitproductsapp.service.products;
 
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationOutputDTO;

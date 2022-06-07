@@ -3,7 +3,10 @@ package com.upm.miw.tfm.eatitproductsapp.service.model;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -18,4 +21,7 @@ public class Product {
     private String barcode;
 
     private String name;
+
+    @DBRef
+    List<Ingredient> ingredients;
 }

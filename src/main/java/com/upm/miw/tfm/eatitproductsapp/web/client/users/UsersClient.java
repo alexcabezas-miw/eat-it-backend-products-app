@@ -1,4 +1,4 @@
-package com.upm.miw.tfm.eatitproductsapp.service.users;
+package com.upm.miw.tfm.eatitproductsapp.web.client.users;
 
 import feign.Param;
 import feign.RequestLine;
