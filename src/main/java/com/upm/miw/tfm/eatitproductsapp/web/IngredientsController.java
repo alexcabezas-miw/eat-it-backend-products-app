@@ -7,6 +7,7 @@ import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriUtils;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -30,7 +31,7 @@ public class IngredientsController {
     public ResponseEntity<?> createIngredient(@RequestBody @Valid IngredientCreationDTO dto) {
         try {
             IngredientCreationDTO ingredient = this.ingredientsService.createIngredient(dto);
-            return ResponseEntity.created(URI.create("/" + ingredient.getName())).build();
+            return ResponseEntity.created(URI.create("/ingredients/" + UriUtils.encodePath(ingredient.getName(), "UTF-8"))).build();
         } catch (ValidationException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

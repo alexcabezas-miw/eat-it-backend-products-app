@@ -19,4 +19,8 @@ public interface ProductsMapper {
     default List<Ingredient> fromIngredientsNameList(List<String> source) {
         return source.stream().map(s -> Ingredient.builder().name(s).build()).collect(Collectors.toList());
     }
+
+    default List<String> fromIngredientList(List<Ingredient> source) {
+        return source.stream().map(Ingredient::getName).collect(Collectors.toList());
+    }
 }
