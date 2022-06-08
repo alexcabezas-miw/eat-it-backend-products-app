@@ -23,5 +23,5 @@ public class Product {
     private String name;
 
     @DBRef
-    List<Ingredient> ingredients;
+    private List<Ingredient> ingredients;
 }

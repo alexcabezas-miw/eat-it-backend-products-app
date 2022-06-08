@@ -23,4 +23,27 @@ class IngredientsRepositoryIntegrationTest extends AbstractIntegrationTest {
         then:
         ingredient.isEmpty()
     }
+
+    def "repository returns ingredients when finding by search term" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("a").build())
+        ingredientsRepository.save(Ingredient.builder().name("ab").build())
+        ingredientsRepository.save(Ingredient.builder().name("abc").build())
+        ingredientsRepository.save(Ingredient.builder().name("bc").build())
+        ingredientsRepository.save(Ingredient.builder().name("c").build())
+
+        when:
+        def ingredients = ingredientsRepository.findByNameLike("a")
+
+        then:
+        ingredients.size() == 3
+    }
+
+    def "repository returns empty when no ingredients were found by search term" () {
+        when:
+        def ingredients = ingredientsRepository.findByNameLike("a")
+
+        then:
+        ingredients.isEmpty()
+    }
 }

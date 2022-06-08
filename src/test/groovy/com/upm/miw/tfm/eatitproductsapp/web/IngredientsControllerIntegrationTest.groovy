@@ -46,4 +46,40 @@ class IngredientsControllerIntegrationTest extends AbstractIntegrationTest {
         then:
         thrown(AuthenticationCredentialsNotFoundException)
     }
+
+    @WithMockUser(username = "acabezas", roles = ["DEFAULT_USER"])
+    def "server returns 200 and ingredients when finding by search term" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("salmon").build())
+        ingredientsRepository.save(Ingredient.builder().name("sal").build())
+        ingredientsRepository.save(Ingredient.builder().name("curry").build())
+
+        when:
+        def response = ingredientsController.findIngredientsWithNameLike("sal")
+
+        then:
+        response.getStatusCode() == HttpStatus.OK
+        response.getBody().size() == 2
+    }
+
+    @WithMockUser(username = "acabezas", roles = ["DEFAULT_USER"])
+    def "server returns 200 and no ingrediets when finding by search term and no ingredients were found" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("curry").build())
+
+        when:
+        def response = ingredientsController.findIngredientsWithNameLike("sal")
+
+        then:
+        response.getStatusCode() == HttpStatus.OK
+        response.getBody().isEmpty()
+    }
+
+    def "server throws exception when user is not authenticated" () {
+        when:
+        ingredientsController.findIngredientsWithNameLike("sal")
+
+        then:
+        thrown(AuthenticationCredentialsNotFoundException)
+    }
 }

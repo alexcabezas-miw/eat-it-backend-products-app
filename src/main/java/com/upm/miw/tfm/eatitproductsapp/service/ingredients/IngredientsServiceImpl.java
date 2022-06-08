@@ -5,9 +5,12 @@ import com.upm.miw.tfm.eatitproductsapp.repository.IngredientsRepository;
 import com.upm.miw.tfm.eatitproductsapp.service.mapper.IngredientMapper;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IngredientsServiceImpl implements IngredientsService {
@@ -29,5 +32,13 @@ public class IngredientsServiceImpl implements IngredientsService {
         }
         Ingredient savedIngredient = this.ingredientsRepository.save(this.ingredientMapper.fromCreationDTO(ingredientCreationDTO));
         return this.ingredientMapper.toCreationDTO(savedIngredient);
+    }
+
+    @Override
+    public Collection<IngredientDTO> findIngredientsWithNameLike(String name) {
+        Collection<Ingredient> ingredients = this.ingredientsRepository.findByNameLike(name);
+        return ingredients.stream()
+                .map(ing -> IngredientDTO.builder().name(ing.getName()).build())
+                .collect(Collectors.toList());
     }
 }

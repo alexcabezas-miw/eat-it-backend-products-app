@@ -5,7 +5,6 @@ import com.upm.miw.tfm.eatitproductsapp.exception.IngredientAlreadyExistsValidat
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
 import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
-import spock.lang.Specification
 
 class IngredientsServiceIntegrationTest extends AbstractIntegrationTest {
 
@@ -31,5 +30,35 @@ class IngredientsServiceIntegrationTest extends AbstractIntegrationTest {
 
         then:
         thrown(IngredientAlreadyExistsValidationException)
+    }
+
+    def "service returns ingredients when finding by search term" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("a").build())
+        ingredientsRepository.save(Ingredient.builder().name("ab").build())
+        ingredientsRepository.save(Ingredient.builder().name("abc").build())
+        ingredientsRepository.save(Ingredient.builder().name("bc").build())
+        ingredientsRepository.save(Ingredient.builder().name("c").build())
+
+        when:
+        def ingredients = ingredientsService.findIngredientsWithNameLike("a")
+
+        then:
+        ingredients.size() == 3
+    }
+
+    def "service returns empty when finding by search term didn't find any product" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("a").build())
+        ingredientsRepository.save(Ingredient.builder().name("ab").build())
+        ingredientsRepository.save(Ingredient.builder().name("abc").build())
+        ingredientsRepository.save(Ingredient.builder().name("bc").build())
+        ingredientsRepository.save(Ingredient.builder().name("c").build())
+
+        when:
+        def ingredients = ingredientsService.findIngredientsWithNameLike("d")
+
+        then:
+        ingredients.isEmpty()
     }
 }
