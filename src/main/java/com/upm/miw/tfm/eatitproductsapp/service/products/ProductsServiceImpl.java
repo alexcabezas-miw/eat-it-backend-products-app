@@ -1,6 +1,9 @@
 package com.upm.miw.tfm.eatitproductsapp.service.products;
 
+import com.upm.miw.tfm.eatitproductsapp.exception.IngredientDoesNotExistValidationException;
 import com.upm.miw.tfm.eatitproductsapp.exception.ProductNotFoundValidationException;
+import com.upm.miw.tfm.eatitproductsapp.repository.IngredientsRepository;
+import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationOutputDTO;
 import com.upm.miw.tfm.eatitproductsapp.exception.BarcodeAlreadyAssignedToProductValidationException;
@@ -11,17 +14,22 @@ import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
 
     private final ProductsRepository productsRepository;
+    private final IngredientsRepository ingredientsRepository;
     private final ProductsMapper productsMapper;
 
-    public ProductsServiceImpl(ProductsRepository productsRepository, ProductsMapper productsMapper) {
+    public ProductsServiceImpl(ProductsRepository productsRepository,
+                               IngredientsRepository ingredientsRepository, ProductsMapper productsMapper) {
         this.productsRepository = productsRepository;
+        this.ingredientsRepository = ingredientsRepository;
         this.productsMapper = productsMapper;
     }
 
@@ -33,6 +41,15 @@ public class ProductsServiceImpl implements ProductsService {
         }
 
         Product product = this.productsMapper.fromCreationDTO(dto);
+        List<Ingredient> recoveredIngredientsFromDb = product.getIngredients().stream().map(ingredient -> {
+            Optional<Ingredient> ingFromDb = this.ingredientsRepository.findByName(ingredient.getName());
+            if (ingFromDb.isEmpty()) {
+                throw new IngredientDoesNotExistValidationException(ingredient.getName());
+            }
+            return ingFromDb.get();
+        }).collect(Collectors.toList());
+        product.setIngredients(recoveredIngredientsFromDb);
+
         Product savedProduct = this.productsRepository.save(product);
         return this.productsMapper.toCreationOutputDTO(savedProduct);
     }

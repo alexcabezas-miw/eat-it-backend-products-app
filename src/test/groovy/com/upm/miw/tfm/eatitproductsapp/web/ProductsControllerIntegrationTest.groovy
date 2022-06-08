@@ -1,6 +1,7 @@
 package com.upm.miw.tfm.eatitproductsapp.web
 
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
+import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,6 +25,33 @@ class ProductsControllerIntegrationTest extends AbstractIntegrationTest {
 
         then:
         response.getStatusCode() == HttpStatus.CREATED
+    }
+
+    @WithMockUser(username = "admin", roles = ["ADMIN"])
+    def "server returns 201 when product is created successfully with ingredients and user is admin" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("ingredient1").build())
+
+        when:
+        def response = productsController.createProduct(ProductCreationDTO.builder()
+                .name("Almendras")
+                .barcode("barcode1")
+                .ingredients(["ingredient1"])
+                .build())
+
+        then:
+        response.getStatusCode() == HttpStatus.CREATED
+    }
+
+    @WithMockUser(username = "admin", roles = ["ADMIN"])
+    def "server returns 400 when saving a products with ingredients that does not exist in database" () {
+        when:
+        def response = productsController.createProduct(ProductCreationDTO.builder()
+                .name("Almendras")
+                .barcode("barcode1").ingredients(["ingredient1"]).build())
+
+        then:
+        response.getStatusCode() == HttpStatus.BAD_REQUEST
     }
 
     @WithMockUser(username = "admin", roles = ["ADMIN"])
