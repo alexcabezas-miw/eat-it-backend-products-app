@@ -127,4 +127,41 @@ class RestrictionsControllerIntegrationTest extends AbstractIntegrationTest {
         response.getStatusCode() == HttpStatus.OK
         response.getBody().size() == 2
     }
+
+    @WithMockUser(username = "admin", roles = ["ADMIN"])
+    def "server returns no content and restrictions is removed when remove by name is called" () {
+        given:
+        def ingredient = Ingredient.builder().name("Leche").build()
+        def ingredient2 = Ingredient.builder().name("Carne").build()
+        def ingredient3 = Ingredient.builder().name("Pescado").build()
+        this.ingredientsRepository.saveAll([ingredient, ingredient2, ingredient3])
+        this.restrictionsRepository.save(Restriction.builder().name("veganismo")
+                .ingredients([ingredient, ingredient2, ingredient3]).build())
+        assert this.restrictionsRepository.findAll().size() == 1
+
+        when:
+        def result = this.restrictionsController.removeRestrictionByName("veganismo")
+
+        then:
+        result.getStatusCode() == HttpStatus.NO_CONTENT
+        this.restrictionsRepository.findAll().isEmpty()
+    }
+
+    @WithMockUser(username = "admin", roles = ["ADMIN"])
+    def "server returns 400 when trying to remove a non existent restriction" () {
+        when:
+        def result = this.restrictionsController.removeRestrictionByName("veganismo")
+
+        then:
+        result.getStatusCode() == HttpStatus.BAD_REQUEST
+    }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
+    def "controller throws exception when default user attempts to remove a restriction" () {
+        when:
+        this.restrictionsController.removeRestrictionByName("veganismo")
+
+        then:
+        thrown(AccessDeniedException)
+    }
 }
