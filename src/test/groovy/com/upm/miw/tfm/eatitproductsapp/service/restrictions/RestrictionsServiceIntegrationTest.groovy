@@ -3,6 +3,7 @@ package com.upm.miw.tfm.eatitproductsapp.service.restrictions
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.exception.IngredientDoesNotExistValidationException
 import com.upm.miw.tfm.eatitproductsapp.exception.RestrictionAlreadyExistsValidationException
+import com.upm.miw.tfm.eatitproductsapp.exception.RestrictionDoesNotExistsValidationException
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
 import com.upm.miw.tfm.eatitproductsapp.service.model.Restriction
 import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationDTO
@@ -99,5 +100,30 @@ class RestrictionsServiceIntegrationTest extends AbstractIntegrationTest {
 
         then:
         restrictions.size() == 3
+    }
+
+    def "restriction is removed from database when remove by name is called" () {
+        given:
+        def ingredient = Ingredient.builder().name("Leche").build()
+        def ingredient2 = Ingredient.builder().name("Carne").build()
+        def ingredient3 = Ingredient.builder().name("Pescado").build()
+        this.ingredientsRepository.saveAll([ingredient, ingredient2, ingredient3])
+        this.restrictionsRepository.save(Restriction.builder().name("veganismo")
+                .ingredients([ingredient, ingredient2, ingredient3]).build())
+        assert this.restrictionsRepository.findAll().size() == 1
+
+        when:
+        this.restrictionsService.removeRestrictionByName("veganismo")
+
+        then:
+        this.restrictionsRepository.findAll().isEmpty()
+    }
+
+    def "service throws validation exception when remove is called for a non existent restriction" () {
+        when:
+        this.restrictionsService.removeRestrictionByName("veganismo")
+
+        then:
+        thrown(RestrictionDoesNotExistsValidationException)
     }
 }

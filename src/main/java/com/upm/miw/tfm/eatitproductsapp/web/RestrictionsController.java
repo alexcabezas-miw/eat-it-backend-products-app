@@ -20,6 +20,7 @@ public class RestrictionsController {
     public static final String CREATE_RESTRICTION_PATH = "";
     public static final String GET_RESTRICTION_DETAILS = "{name}";
     public static final String FIND_ALL_RESTRICTIONS = "";
+    public static final String REMOVE_RESTRICTION_BY_NAME = "{name}";
 
     private final RestrictionsService restrictionsService;
 
@@ -48,5 +49,16 @@ public class RestrictionsController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Collection<RestrictionDTO>> listAllRestrictions() {
         return ResponseEntity.ok().body(this.restrictionsService.getAllRestrictions());
+    }
+
+    @DeleteMapping(REMOVE_RESTRICTION_BY_NAME)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> removeRestrictionByName(@PathVariable("name") String name) {
+        try {
+            this.restrictionsService.removeRestrictionByName(name);
+            return ResponseEntity.noContent().build();
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

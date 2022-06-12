@@ -10,4 +10,5 @@ public interface RestrictionsService {
     void createRestriction(RestrictionCreationDTO creationDTO);
     Optional<RestrictionDTO> getRestrictionByName(String name);
     Collection<RestrictionDTO> getAllRestrictions();
+    void removeRestrictionByName(String name);
 }

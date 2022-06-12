@@ -2,6 +2,7 @@ package com.upm.miw.tfm.eatitproductsapp.service.restrictions;
 
 import com.upm.miw.tfm.eatitproductsapp.exception.IngredientDoesNotExistValidationException;
 import com.upm.miw.tfm.eatitproductsapp.exception.RestrictionAlreadyExistsValidationException;
+import com.upm.miw.tfm.eatitproductsapp.exception.RestrictionDoesNotExistsValidationException;
 import com.upm.miw.tfm.eatitproductsapp.repository.IngredientsRepository;
 import com.upm.miw.tfm.eatitproductsapp.repository.RestrictionsRepository;
 import com.upm.miw.tfm.eatitproductsapp.service.mapper.RestrictionsMapper;
@@ -57,5 +58,14 @@ public class RestrictionsServiceImpl implements RestrictionsService {
         return this.restrictionsRepository.findAll().stream()
                 .map(this.restrictionsMapper::toRestrictionDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeRestrictionByName(String name) {
+        Optional<Restriction> restriction = this.restrictionsRepository.findByName(name);
+        if(restriction.isEmpty()) {
+            throw new RestrictionDoesNotExistsValidationException(name);
+        }
+        this.restrictionsRepository.delete(restriction.get());
     }
 }
