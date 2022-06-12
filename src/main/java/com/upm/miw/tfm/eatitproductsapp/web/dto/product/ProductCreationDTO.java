@@ -1,4 +1,4 @@
-package com.upm.miw.tfm.eatitproductsapp.web.dto;
+package com.upm.miw.tfm.eatitproductsapp.web.dto.product;
 
 import lombok.Builder;
 import lombok.Data;

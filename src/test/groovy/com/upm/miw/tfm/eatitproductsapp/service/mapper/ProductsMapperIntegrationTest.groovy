@@ -2,9 +2,9 @@ package com.upm.miw.tfm.eatitproductsapp.service.mapper
 
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationOutputDTO
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationOutputDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductListDTO
 import org.springframework.beans.factory.annotation.Autowired
 
 class ProductsMapperIntegrationTest extends AbstractIntegrationTest {

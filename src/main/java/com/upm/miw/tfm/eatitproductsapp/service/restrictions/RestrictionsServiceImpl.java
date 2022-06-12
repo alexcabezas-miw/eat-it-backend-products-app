@@ -7,7 +7,7 @@ import com.upm.miw.tfm.eatitproductsapp.repository.RestrictionsRepository;
 import com.upm.miw.tfm.eatitproductsapp.service.mapper.RestrictionsMapper;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Restriction;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.RestrictionCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

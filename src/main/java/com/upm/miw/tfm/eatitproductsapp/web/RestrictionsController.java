@@ -2,7 +2,7 @@ package com.upm.miw.tfm.eatitproductsapp.web;
 
 import com.upm.miw.tfm.eatitproductsapp.exception.ValidationException;
 import com.upm.miw.tfm.eatitproductsapp.service.restrictions.RestrictionsService;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.RestrictionCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;

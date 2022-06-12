@@ -2,7 +2,7 @@ package com.upm.miw.tfm.eatitproductsapp.web
 
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
-import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientCreationDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException

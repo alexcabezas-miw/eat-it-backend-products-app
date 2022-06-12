@@ -3,7 +3,7 @@ package com.upm.miw.tfm.eatitproductsapp.service.ingredients
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.exception.IngredientAlreadyExistsValidationException
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
-import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientCreationDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
 
 class IngredientsServiceIntegrationTest extends AbstractIntegrationTest {

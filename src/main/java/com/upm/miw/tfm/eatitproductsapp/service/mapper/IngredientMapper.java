@@ -1,7 +1,7 @@
 package com.upm.miw.tfm.eatitproductsapp.service.mapper;
 
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientCreationDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

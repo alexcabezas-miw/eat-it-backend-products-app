@@ -1,7 +1,7 @@
 package com.upm.miw.tfm.eatitproductsapp.service.mapper;
 
 import com.upm.miw.tfm.eatitproductsapp.service.model.Restriction;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.RestrictionCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

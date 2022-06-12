@@ -4,8 +4,8 @@ import com.upm.miw.tfm.eatitproductsapp.exception.IngredientAlreadyExistsValidat
 import com.upm.miw.tfm.eatitproductsapp.repository.IngredientsRepository;
 import com.upm.miw.tfm.eatitproductsapp.service.mapper.IngredientMapper;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientCreationDTO;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

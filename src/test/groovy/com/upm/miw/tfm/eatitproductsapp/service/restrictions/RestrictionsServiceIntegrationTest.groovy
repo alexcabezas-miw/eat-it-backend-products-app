@@ -4,7 +4,7 @@ import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.exception.IngredientDoesNotExistValidationException
 import com.upm.miw.tfm.eatitproductsapp.exception.RestrictionAlreadyExistsValidationException
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
-import com.upm.miw.tfm.eatitproductsapp.web.dto.RestrictionCreationDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
 
 class RestrictionsServiceIntegrationTest extends AbstractIntegrationTest {
