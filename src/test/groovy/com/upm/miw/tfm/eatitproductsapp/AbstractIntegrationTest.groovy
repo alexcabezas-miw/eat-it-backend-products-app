@@ -2,6 +2,7 @@ package com.upm.miw.tfm.eatitproductsapp
 
 import com.upm.miw.tfm.eatitproductsapp.repository.IngredientsRepository
 import com.upm.miw.tfm.eatitproductsapp.repository.ProductsRepository
+import com.upm.miw.tfm.eatitproductsapp.repository.RestrictionsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo
 import org.springframework.boot.test.context.SpringBootTest
@@ -19,8 +20,12 @@ class AbstractIntegrationTest extends Specification {
     @Autowired
     protected IngredientsRepository ingredientsRepository
 
+    @Autowired
+    protected RestrictionsRepository restrictionsRepository
+
     def cleanup() {
         productsRepository.deleteAll()
         ingredientsRepository.deleteAll()
+        restrictionsRepository.deleteAll()
     }
 }
