@@ -3,10 +3,11 @@ package com.upm.miw.tfm.eatitproductsapp.web
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
 import com.upm.miw.tfm.eatitproductsapp.service.model.Restriction
-import com.upm.miw.tfm.eatitproductsapp.web.dto.RestrictionCreationDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ContextConfiguration
 
@@ -71,5 +72,40 @@ class RestrictionsControllerIntegrationTest extends AbstractIntegrationTest {
 
         then:
         thrown(AccessDeniedException)
+    }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
+    def "server returns 200 and restriction details when find by name" () {
+        given:
+        def ingredient = Ingredient.builder().name("Leche").build()
+        def ingredient2 = Ingredient.builder().name("Carne").build()
+        def ingredient3 = Ingredient.builder().name("Pescado").build()
+        this.ingredientsRepository.saveAll([ingredient, ingredient2, ingredient3])
+        this.restrictionsRepository.save(Restriction.builder().name("veganismo")
+                .ingredients([ingredient, ingredient2, ingredient3]).build())
+
+        when:
+        def response = this.restrictionsController.getRestrictionDetails("veganismo")
+
+        then:
+        response.getStatusCode() == HttpStatus.OK
+        response.getBody().getName() == "veganismo"
+    }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
+    def "server returns 404 when find by name and no restriction was found" () {
+        when:
+        def response = this.restrictionsController.getRestrictionDetails("veganismo")
+
+        then:
+        response.getStatusCode() == HttpStatus.NOT_FOUND
+    }
+
+    def "controller throws error when find by name is called with no authentication" () {
+        when:
+        this.restrictionsController.getRestrictionDetails("veganismo")
+
+        then:
+        thrown(AuthenticationCredentialsNotFoundException)
     }
 }

@@ -1,4 +1,4 @@
-package com.upm.miw.tfm.eatitproductsapp.web.dto;
+package com.upm.miw.tfm.eatitproductsapp.web.dto.restriction;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

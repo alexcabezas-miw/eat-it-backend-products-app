@@ -3,7 +3,7 @@ package com.upm.miw.tfm.eatitproductsapp.repository
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.service.model.Restriction
 
-class RestrictionsRepositoryTest extends AbstractIntegrationTest {
+class RestrictionsRepositoryIntegrationTest extends AbstractIntegrationTest {
 
     def "Repository returns entity if found by name" () {
         given:

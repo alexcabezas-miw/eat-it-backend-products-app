@@ -1,8 +1,8 @@
 package com.upm.miw.tfm.eatitproductsapp.service.products;
 
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationOutputDTO;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationOutputDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductListDTO;
 
 import java.util.Collection;
 import java.util.Optional;

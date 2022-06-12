@@ -2,8 +2,8 @@ package com.upm.miw.tfm.eatitproductsapp.web;
 
 import com.upm.miw.tfm.eatitproductsapp.exception.ValidationException;
 import com.upm.miw.tfm.eatitproductsapp.service.ingredients.IngredientsService;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientCreationDTO;
-import com.upm.miw.tfm.eatitproductsapp.web.dto.IngredientDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

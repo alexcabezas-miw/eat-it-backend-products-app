@@ -5,8 +5,8 @@ import com.upm.miw.tfm.eatitproductsapp.exception.BarcodeAlreadyAssignedToProduc
 import com.upm.miw.tfm.eatitproductsapp.exception.ProductNotFoundValidationException
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
 import com.upm.miw.tfm.eatitproductsapp.service.products.ProductsService
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductCreationDTO
-import com.upm.miw.tfm.eatitproductsapp.web.dto.ProductListDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationDTO
+import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductListDTO
 import org.springframework.beans.factory.annotation.Autowired
 
 class ProductsServiceIntegrationTest extends AbstractIntegrationTest {

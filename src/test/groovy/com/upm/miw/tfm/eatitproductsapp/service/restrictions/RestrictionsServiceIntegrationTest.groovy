@@ -4,7 +4,8 @@ import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.exception.IngredientDoesNotExistValidationException
 import com.upm.miw.tfm.eatitproductsapp.exception.RestrictionAlreadyExistsValidationException
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
-import com.upm.miw.tfm.eatitproductsapp.web.dto.RestrictionCreationDTO
+import com.upm.miw.tfm.eatitproductsapp.service.model.Restriction
+import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
 
 class RestrictionsServiceIntegrationTest extends AbstractIntegrationTest {
@@ -53,5 +54,31 @@ class RestrictionsServiceIntegrationTest extends AbstractIntegrationTest {
 
         then:
         thrown(RestrictionAlreadyExistsValidationException)
+    }
+
+    def "service returns restriction if found by name" () {
+        given:
+        def ingredient = Ingredient.builder().name("Leche").build()
+        def ingredient2 = Ingredient.builder().name("Carne").build()
+        def ingredient3 = Ingredient.builder().name("Pescado").build()
+        this.ingredientsRepository.saveAll([ingredient, ingredient2, ingredient3])
+        this.restrictionsRepository.save(Restriction.builder().name("veganismo")
+                .ingredients([ingredient, ingredient2, ingredient3]).build())
+
+        when:
+        def restriction = this.restrictionsService.getRestrictionByName("veganismo")
+
+        then:
+        restriction.isPresent()
+        restriction.get().getName() == "veganismo"
+        restriction.get().getIngredients().containsAll(["Leche", "Carne", "Pescado"])
+    }
+
+    def "service returns empty if not found by name" () {
+        when:
+        def restriction = this.restrictionsService.getRestrictionByName("veganismo")
+
+        then:
+        restriction.isEmpty()
     }
 }
