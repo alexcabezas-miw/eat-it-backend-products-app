@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Collection;
 
 @RestController
 @RequestMapping(RestrictionsController.RESTRICTIONS_PATH)
@@ -18,6 +19,7 @@ public class RestrictionsController {
     public static final String RESTRICTIONS_PATH = "/restrictions";
     public static final String CREATE_RESTRICTION_PATH = "";
     public static final String GET_RESTRICTION_DETAILS = "{name}";
+    public static final String FIND_ALL_RESTRICTIONS = "";
 
     private final RestrictionsService restrictionsService;
 
@@ -40,5 +42,11 @@ public class RestrictionsController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RestrictionDTO> getRestrictionDetails(@PathVariable("name") String name) {
         return ResponseEntity.of(this.restrictionsService.getRestrictionByName(name));
+    }
+
+    @GetMapping(FIND_ALL_RESTRICTIONS)
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Collection<RestrictionDTO>> listAllRestrictions() {
+        return ResponseEntity.ok().body(this.restrictionsService.getAllRestrictions());
     }
 }
