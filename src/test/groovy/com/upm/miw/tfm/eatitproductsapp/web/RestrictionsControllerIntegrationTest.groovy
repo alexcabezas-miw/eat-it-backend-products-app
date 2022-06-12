@@ -108,4 +108,23 @@ class RestrictionsControllerIntegrationTest extends AbstractIntegrationTest {
         then:
         thrown(AuthenticationCredentialsNotFoundException)
     }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
+    def "server returns 200 and list of restrictions when listAll is called" () {
+        def ingredient = Ingredient.builder().name("Leche").build()
+        def ingredient2 = Ingredient.builder().name("Carne").build()
+        def ingredient3 = Ingredient.builder().name("Pescado").build()
+        this.ingredientsRepository.saveAll([ingredient, ingredient2, ingredient3])
+        this.restrictionsRepository.save(Restriction.builder().name("veganismo")
+                .ingredients([ingredient, ingredient2, ingredient3]).build())
+        this.restrictionsRepository.save(Restriction.builder().name("Intolerante a la lactosa")
+                .ingredients([ingredient, ingredient2, ingredient3]).build())
+
+        when:
+        def response = this.restrictionsController.listAllRestrictions()
+
+        then:
+        response.getStatusCode() == HttpStatus.OK
+        response.getBody().size() == 2
+    }
 }

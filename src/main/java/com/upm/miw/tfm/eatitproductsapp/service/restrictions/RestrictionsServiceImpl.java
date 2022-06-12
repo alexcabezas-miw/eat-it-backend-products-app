@@ -11,6 +11,7 @@ import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationD
 import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,5 +50,12 @@ public class RestrictionsServiceImpl implements RestrictionsService {
     public Optional<RestrictionDTO> getRestrictionByName(String name) {
         return this.restrictionsRepository.findByName(name)
                 .map(this.restrictionsMapper::toRestrictionDTO);
+    }
+
+    @Override
+    public Collection<RestrictionDTO> getAllRestrictions() {
+        return this.restrictionsRepository.findAll().stream()
+                .map(this.restrictionsMapper::toRestrictionDTO)
+                .collect(Collectors.toList());
     }
 }
