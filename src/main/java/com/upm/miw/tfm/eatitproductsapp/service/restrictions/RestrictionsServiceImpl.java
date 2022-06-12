@@ -8,6 +8,7 @@ import com.upm.miw.tfm.eatitproductsapp.service.mapper.RestrictionsMapper;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Restriction;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionCreationDTO;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.restriction.RestrictionDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,5 +43,11 @@ public class RestrictionsServiceImpl implements RestrictionsService {
         Restriction restriction = this.restrictionsMapper.fromCreationDTO(creationDTO);
         restriction.setIngredients(mappedIngredients);
         this.restrictionsRepository.save(restriction);
+    }
+
+    @Override
+    public Optional<RestrictionDTO> getRestrictionByName(String name) {
+        return this.restrictionsRepository.findByName(name)
+                .map(this.restrictionsMapper::toRestrictionDTO);
     }
 }
