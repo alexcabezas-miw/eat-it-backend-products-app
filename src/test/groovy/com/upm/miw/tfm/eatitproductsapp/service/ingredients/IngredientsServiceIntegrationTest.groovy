@@ -2,6 +2,7 @@ package com.upm.miw.tfm.eatitproductsapp.service.ingredients
 
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.exception.IngredientAlreadyExistsValidationException
+import com.upm.miw.tfm.eatitproductsapp.exception.IngredientDoesNotExistValidationException
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
@@ -60,5 +61,24 @@ class IngredientsServiceIntegrationTest extends AbstractIntegrationTest {
 
         then:
         ingredients.isEmpty()
+    }
+
+    def "given ingredient, it is removed if remove by name is called" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("ingredient").build())
+
+        when:
+        this.ingredientsService.removeIngredientByName("ingredient")
+
+        then:
+        ingredientsRepository.findAll().size() == 0
+    }
+
+    def "remove by ingredient throws validation exception if ingredient does not exist" () {
+        when:
+        this.ingredientsService.removeIngredientByName("ingredient")
+
+        then:
+        thrown(IngredientDoesNotExistValidationException)
     }
 }

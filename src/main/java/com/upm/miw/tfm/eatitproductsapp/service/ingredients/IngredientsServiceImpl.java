@@ -1,6 +1,7 @@
 package com.upm.miw.tfm.eatitproductsapp.service.ingredients;
 
 import com.upm.miw.tfm.eatitproductsapp.exception.IngredientAlreadyExistsValidationException;
+import com.upm.miw.tfm.eatitproductsapp.exception.IngredientDoesNotExistValidationException;
 import com.upm.miw.tfm.eatitproductsapp.repository.IngredientsRepository;
 import com.upm.miw.tfm.eatitproductsapp.service.mapper.IngredientMapper;
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient;
@@ -40,5 +41,14 @@ public class IngredientsServiceImpl implements IngredientsService {
         return ingredients.stream()
                 .map(ing -> IngredientDTO.builder().name(ing.getName()).build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeIngredientByName(String name) {
+        Optional<Ingredient> ingredient = this.ingredientsRepository.findByName(name);
+        if(ingredient.isEmpty()) {
+            throw new IngredientDoesNotExistValidationException(name);
+        }
+        this.ingredientsRepository.delete(ingredient.get());
     }
 }
