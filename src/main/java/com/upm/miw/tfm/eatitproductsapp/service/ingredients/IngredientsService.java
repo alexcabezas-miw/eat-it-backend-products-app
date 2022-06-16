@@ -8,4 +8,5 @@ import java.util.Collection;
 public interface IngredientsService {
     IngredientCreationDTO createIngredient(IngredientCreationDTO ingredientCreationDTO);
     Collection<IngredientDTO> findIngredientsWithNameLike(String name);
+    void removeIngredientByName(String name);
 }

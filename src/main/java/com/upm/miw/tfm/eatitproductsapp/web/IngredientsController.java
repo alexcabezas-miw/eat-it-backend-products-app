@@ -19,6 +19,7 @@ public class IngredientsController {
     public static final String INGREDIENTS_PATH = "/ingredients";
     public static final String CREATE_INGREDIENT_PATH = "";
     public static final String FIND_BY_NAME_IN_INGREDIENT_PATH = "/{name}";
+    public static final String REMOVE_INGREDIENT_BY_NAME = "/{name}";
 
     private final IngredientsService ingredientsService;
 
@@ -42,5 +43,16 @@ public class IngredientsController {
     public ResponseEntity<Collection<IngredientDTO>> findIngredientsWithNameLike(@PathVariable("name") String name) {
         Collection<IngredientDTO> ingredients = this.ingredientsService.findIngredientsWithNameLike(name);
         return ResponseEntity.ok(ingredients);
+    }
+
+    @DeleteMapping(REMOVE_INGREDIENT_BY_NAME)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> removeIngredientByName(@PathVariable("name") String name) {
+        try {
+            this.ingredientsService.removeIngredientByName(name);
+            return ResponseEntity.noContent().build();
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

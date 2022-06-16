@@ -5,6 +5,7 @@ import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
 import com.upm.miw.tfm.eatitproductsapp.web.dto.ingredient.IngredientCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ContextConfiguration
@@ -81,5 +82,38 @@ class IngredientsControllerIntegrationTest extends AbstractIntegrationTest {
 
         then:
         thrown(AuthenticationCredentialsNotFoundException)
+    }
+
+    @WithMockUser(username = "acabezas", roles = ["ADMIN"])
+    def "server returns 201 if remove ingredient by name works successfully and user is admin" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("curry").build())
+
+        when:
+        def response = this.ingredientsController.removeIngredientByName("curry")
+
+        then:
+        response.getStatusCode() == HttpStatus.NO_CONTENT
+    }
+
+    @WithMockUser(username = "acabezas", roles = ["ADMIN"])
+    def "server returns 400 if remove ingredient by name try to remove non existent ingredient and user is admin" () {
+        when:
+        def response = this.ingredientsController.removeIngredientByName("curry")
+
+        then:
+        response.getStatusCode() == HttpStatus.BAD_REQUEST
+    }
+
+    @WithMockUser(username = "acabezas", roles = ["DEFAULT_USER"])
+    def "server throws error if user is not admin" () {
+        given:
+        ingredientsRepository.save(Ingredient.builder().name("curry").build())
+
+        when:
+        this.ingredientsController.removeIngredientByName("curry")
+
+        then:
+        thrown(AccessDeniedException)
     }
 }
