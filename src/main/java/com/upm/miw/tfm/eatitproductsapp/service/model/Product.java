@@ -26,4 +26,8 @@ public class Product {
     @DBRef
     @Builder.Default
     private List<Ingredient> ingredients = new ArrayList<>();
+
+    @DBRef
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 }

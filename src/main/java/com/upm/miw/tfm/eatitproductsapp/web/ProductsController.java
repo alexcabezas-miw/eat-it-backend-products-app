@@ -2,11 +2,14 @@ package com.upm.miw.tfm.eatitproductsapp.web;
 
 import com.upm.miw.tfm.eatitproductsapp.exception.ValidationException;
 import com.upm.miw.tfm.eatitproductsapp.service.products.ProductsService;
+import com.upm.miw.tfm.eatitproductsapp.web.dto.comment.CommentInputDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationOutputDTO;
 import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductListDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,6 +24,7 @@ public class ProductsController {
     public static final String FIND_BY_BARCODE_PATH = "/barcode/";
     public static final String FIND_BY_NAME_PATH = "/name/";
     public static final String DELETE_BY_BARCODE_PATH = "";
+    public static final String ADD_COMMENT_TO_PRODUCT_PATH = "/comments/add";
 
     private final ProductsService productsService;
 
@@ -59,6 +63,19 @@ public class ProductsController {
     public ResponseEntity<?> removeProductByBarcode(@PathVariable("barcode") String barcode) {
         try {
             this.productsService.removeProductByBarcode(barcode);
+            return ResponseEntity.noContent().build();
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping(ADD_COMMENT_TO_PRODUCT_PATH)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DEFAULT_USER')")
+    public ResponseEntity<?> addCommentToProduct(@RequestBody @Valid CommentInputDTO commentInputDTO) {
+        String username = ((UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUsername();
+        try {
+            this.productsService.addCommentToProduct(username, commentInputDTO);
             return ResponseEntity.noContent().build();
         } catch (ValidationException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -1,5 +1,6 @@
 package com.upm.miw.tfm.eatitproductsapp
 
+import com.upm.miw.tfm.eatitproductsapp.repository.CommentRepository
 import com.upm.miw.tfm.eatitproductsapp.repository.IngredientsRepository
 import com.upm.miw.tfm.eatitproductsapp.repository.ProductsRepository
 import com.upm.miw.tfm.eatitproductsapp.repository.RestrictionsRepository
@@ -23,9 +24,13 @@ class AbstractIntegrationTest extends Specification {
     @Autowired
     protected RestrictionsRepository restrictionsRepository
 
+    @Autowired
+    protected CommentRepository commentRepository
+
     def cleanup() {
         productsRepository.deleteAll()
         ingredientsRepository.deleteAll()
         restrictionsRepository.deleteAll()
+        commentRepository.deleteAll()
     }
 }
