@@ -5,6 +5,7 @@ import com.upm.miw.tfm.eatitproductsapp.exception.BarcodeAlreadyAssignedToProduc
 import com.upm.miw.tfm.eatitproductsapp.exception.ProductNotFoundValidationException
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
 import com.upm.miw.tfm.eatitproductsapp.service.products.ProductsService
+import com.upm.miw.tfm.eatitproductsapp.web.dto.comment.CommentInputDTO
 import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationDTO
 import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductListDTO
 import org.springframework.beans.factory.annotation.Autowired
@@ -97,6 +98,25 @@ class ProductsServiceIntegrationTest extends AbstractIntegrationTest {
     def "remvove product by barcode throws exception if product does not exist" () {
         when:
         this.productsService.removeProductByBarcode("barcode1")
+
+        then:
+        thrown(ProductNotFoundValidationException)
+    }
+
+    def "add comment to product add it to the ones before if product exists" () {
+        given:
+        this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
+
+        when:
+        this.productsService.addCommentToProduct("acabezas", CommentInputDTO.builder().barcode("barcode1").content("content").build())
+
+        then:
+        this.productsRepository.findByBarcode("barcode1").get().getComments().size() == 1
+    }
+
+    def "add comment to product throws error if product does not exists" () {
+        when:
+        this.productsService.addCommentToProduct("acabezas", CommentInputDTO.builder().barcode("barcode1").content("content").build())
 
         then:
         thrown(ProductNotFoundValidationException)

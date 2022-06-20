@@ -3,6 +3,7 @@ package com.upm.miw.tfm.eatitproductsapp.web
 import com.upm.miw.tfm.eatitproductsapp.AbstractIntegrationTest
 import com.upm.miw.tfm.eatitproductsapp.service.model.Ingredient
 import com.upm.miw.tfm.eatitproductsapp.service.model.Product
+import com.upm.miw.tfm.eatitproductsapp.web.dto.comment.CommentInputDTO
 import com.upm.miw.tfm.eatitproductsapp.web.dto.product.ProductCreationDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -171,5 +172,35 @@ class ProductsControllerIntegrationTest extends AbstractIntegrationTest {
 
         then:
         thrown(AccessDeniedException)
+    }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
+    def "add a comment to product works successfully and return 201 when user is authenticated and product exists" () {
+        given:
+        this.productsRepository.save(Product.builder().name("Alitas de pollo").barcode("barcode1").build())
+
+        when:
+        def response = this.productsController.addCommentToProduct(CommentInputDTO.builder().content("content").barcode("barcode1").rate(4).build())
+
+        then:
+        response.getStatusCode() == HttpStatus.NO_CONTENT
+        this.productsRepository.findByBarcode("barcode1").get().getComments().size() == 1
+    }
+
+    @WithMockUser(username = "user", roles = ["DEFAULT_USER"])
+    def "add a comment to product returns 400 when user is authenticated but product does not exists" () {
+        when:
+        def response = this.productsController.addCommentToProduct(CommentInputDTO.builder().content("content").barcode("barcode").rate(4).build())
+
+        then:
+        response.getStatusCode() == HttpStatus.BAD_REQUEST
+    }
+
+    def "add a comment throws error when user is not authenticated" () {
+        when:
+        this.productsController.addCommentToProduct(CommentInputDTO.builder().content("content").barcode("barcode").rate(4).build())
+
+        then:
+        thrown(AuthenticationCredentialsNotFoundException)
     }
 }
