@@ -10,6 +10,7 @@ public class ProductListDTO {
     private String id;
     private String barcode;
     private String name;
+    private String image;
     private List<String> ingredients;
     private List<CommentDTO> comments;
 }
