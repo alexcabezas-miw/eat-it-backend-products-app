@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.upm.miw.tfm</groupId>
 	<artifactId>eat-it-products-app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Eat it: Products App</name>
 	<description>Application that manages the products</description>
 	<properties>
