@@ -20,4 +20,6 @@ public class ProductCreationDTO {
 
     @Builder.Default
     private List<String> ingredients = new ArrayList<>();
+
+    private String image;
 }

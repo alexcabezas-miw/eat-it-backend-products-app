@@ -23,6 +23,8 @@ public class Product {
 
     private String name;
 
+    private String image;
+
     @DBRef
     @Builder.Default
     private List<Ingredient> ingredients = new ArrayList<>();
